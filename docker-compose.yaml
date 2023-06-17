@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  dev-postgres:
+    image: postgres:15.3-alpine3.17
+    ports:
+      - 15434:5432
+    environment:
+      POSTGRES_USER: yout
+      POSTGRES_PASSWORD: youtpass
+      POSTGRES_DB: yout
+    restart: always
+    networks:
+      - yout
+networks:
+  yout:
