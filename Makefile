@@ -7,4 +7,7 @@ createdb:
 drodb:
 	docker exec -it youtube-tech-school-golang-dev-postgres-1 dropdb simple_bank
 
+sqlc:
+	sqlc generate
+
 .PHONY: createdb
