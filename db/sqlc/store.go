@@ -54,6 +54,7 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry`
 }
 
+// トランザクションが必要なSQL処理をクロージャーでまとめて、execTx()メソッドにわたすことで、銀行口座のお金のデータ移動を実現した実装部分
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
@@ -85,6 +86,22 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
+		// 口座の金額の移動(変更)
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: -arg.Amount,
+			ID:     arg.FromAccountID,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: arg.Amount,
+			ID:     arg.ToAccountID,
+		})
+		if err != nil {
+			return err
+		}
 		return nil
 
 	})
