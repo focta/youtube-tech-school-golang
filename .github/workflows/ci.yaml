@@ -21,7 +21,6 @@ jobs:
           POSTGRES_DB: simple_bank
           POSTGRES_USER: yout
           POSTGRES_PASSWORD: youtpass
-          POSTGRES_PORT: 15434
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
