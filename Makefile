@@ -8,7 +8,7 @@ drodb:
 	docker exec -it youtube-tech-school-golang-dev-postgres-1 dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://yout:youtpass@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://yout:youtpass@localhost:15434/simple_bank?sslmode=disable" -verbose up
 
 sqlc:
 	sqlc generate
