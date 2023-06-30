@@ -19,6 +19,8 @@ func NewServer(store *db.Store) *Server {
 
 	// Lesson11 4　各パスを実装してみる(この時点では宣言した第2引数の関数は未実装のため、エラー状態)
 	router.POST("/accounts", server.createAccount)
+	// Lesson11 24　GETのパスを追加する
+	router.GET("/accounts/:id", server.getAccount)
 
 	server.router = router
 	return server

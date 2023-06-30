@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 
 	db "github.com/focta/youtube-tech-school-golang/db/sqlc"
@@ -36,6 +37,37 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-// Lesson11 13　正常系のレスポンスを記載する。
+	// Lesson11 13　正常系のレスポンスを記載する。
 	ctx.JSON(http.StatusOK, account)
+}
+
+// Lesson11 31 忘れていたのでリクエストのマッピング用の構造体を宣言しておく。
+type getAccountRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+// Lesson11 25　serverで作成したルーティングの関数を作成する。
+func (server *Server) getAccount(ctx *gin.Context) {
+	// Lesson11 26 ShouldBindUri()でパラメータのbindを行う(この時点では　getAccountRequest型を宣言していないため、エラーとなっている)
+	var req getAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Lesson11 27 アカウントをDBから引っ張ってくる
+	account, err := server.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		// Lesson11 28 アカウントがテーブルに無い場合のエラーを定義する
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		// Lesson11 29 上記以外のデータはSQL発行での構成上のエラーとして500で返送する
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	// Lesson11 30 正常系のレスポンスを設定する
+	ctx.JSON(http.StatusOK, account)
+
 }
