@@ -21,6 +21,8 @@ func NewServer(store *db.Store) *Server {
 	router.POST("/accounts", server.createAccount)
 	// Lesson11 24　GETのパスを追加する
 	router.GET("/accounts/:id", server.getAccount)
+	// Lesson11 31　リスト取得のパスを追加
+	router.GET("/accounts", server.listAccount)
 
 	server.router = router
 	return server

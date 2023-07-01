@@ -71,3 +71,34 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, account)
 
 }
+
+// Lesson11 33 リストでアカウントを取得するための構造体を実装する
+type getListAccountRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+// Lesson11 34　listで取得するメソッドをgetAccountをkぴーして実装する
+func (server *Server) listAccount(ctx *gin.Context) {
+	var req getListAccountRequest
+	// Lesson11 36　 今回はURLパラメータから取得するので、Queryの取得メソッドを呼び出すように変更
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Lesson11 35　ListAccountのパラメータを設定して、メソッドの引数に指定する
+	arg := db.ListAccountsParams{
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
+	}
+
+	accounts, err := server.store.ListAccounts(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	// Lesson11 30 正常系のレスポンスを設定する
+	ctx.JSON(http.StatusOK, accounts)
+
+}
