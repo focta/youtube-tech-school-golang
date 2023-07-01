@@ -23,6 +23,9 @@ func NewServer(store *db.Store) *Server {
 	router.GET("/accounts/:id", server.getAccount)
 	// Lesson11 31　リスト取得のパスを追加
 	router.GET("/accounts", server.listAccount)
+	// Lesson11 残課題
+	router.PUT("/accounts", server.updateAccount)
+	router.DELETE("/accounts/:id", server.deleteAccount)
 
 	server.router = router
 	return server
